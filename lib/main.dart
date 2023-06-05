@@ -5,6 +5,7 @@ import 'package:mynotes/views/login_view.dart';
 import 'package:mynotes/views/register_view.dart';
 import 'package:mynotes/views/verify_email_view.dart';
 import 'dart:developer' as devtools show log;
+import 'constants/routes.dart';
 
 import 'firebase_options.dart';
 
@@ -19,9 +20,9 @@ void main() {
       ),
       home: const HomePage(),
       routes: {
-        '/login/': (context) => const LoginView(),
-        '/register/': (context) => const RegisterView(),
-        '/notes/': (context) => const NotesView(),
+        loginRoute: (context) => const LoginView(),
+        registerRoute: (context) => const RegisterView(),
+        notesRoute: (context) => const NotesView(),
       },
     ),
   );
@@ -78,13 +79,15 @@ class _NotesViewState extends State<NotesView> {
             onSelected: (value) async {
               switch (value) {
                 case MenuAction.logout:
-                  final showLogout = await showDialogLogOut(context);
-                  if (showLogout) {
+                  final shouldLogout = await showDialogLogOut(context);
+                  if (shouldLogout) {
                     await FirebaseAuth.instance.signOut();
 
                     if (context.mounted) {
-                      Navigator.of(context)
-                          .pushNamedAndRemoveUntil('/login/', (_) => false);
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                        loginRoute,
+                        (_) => false,
+                      );
                     }
                     // if there is an error on getting back to the login view remove the if
                     // statement with the context.mounted
