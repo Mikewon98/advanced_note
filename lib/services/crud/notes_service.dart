@@ -9,16 +9,21 @@ import 'package:path/path.dart';
 class NotesService {
   Database? _db;
 
-  final _notesStreamController =
-      StreamController<List<DatabaseNotes>>.broadcast();
-
   Stream<List<DatabaseNotes>> get allNotes => _notesStreamController.stream;
 
   List<DatabaseNotes> _notes = [];
 
   static final NotesService _shared = NotesService._sharedInstance();
-  NotesService._sharedInstance();
+  NotesService._sharedInstance() {
+    _notesStreamController = StreamController<List<DatabaseNotes>>.broadcast(
+      onListen: () {
+        _notesStreamController.sink.add(_notes);
+      },
+    );
+  }
   factory NotesService() => _shared;
+
+  late final StreamController<List<DatabaseNotes>> _notesStreamController;
 
   Future<DatabaseUser> getOrCreateUser({required String email}) async {
     try {
