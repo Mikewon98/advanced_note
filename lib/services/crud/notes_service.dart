@@ -25,20 +25,20 @@ class NotesService {
 
   late final StreamController<List<DatabaseNotes>> _notesStreamController;
 
-   Stream<List<DatabaseNotes>> get allNotes =>
-      _notesStreamController.stream.filter((note) {
-        final currentUser = _user;
-        if (currentUser != null) {
-          return note.userId == currentUser.id;
-        } else {
-          throw UserShouldBeSetBeforeReadingAllNotes();
-        }
-      });
+  Stream<List<DatabaseNotes>> get allNotes =>
+      _notesStreamController.stream.filter(
+        (note) {
+          final currentUser = _user;
+          if (currentUser != null) {
+            return note.userId == currentUser.id;
+          } else {
+            throw UserShouldBeSetBeforeReadingAllNotes();
+          }
+        },
+      );
 
-  Future<DatabaseUser> getOrCreateUser({
-    required String email,
-    bool setAsCurrentUser = true,
-  }) async {
+  Future<DatabaseUser> getOrCreateUser(
+      {required String email, bool setAsCurrentUser = true}) async {
     try {
       final user = await getUser(email: email);
       if (setAsCurrentUser) {
