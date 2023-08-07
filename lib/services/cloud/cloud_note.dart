@@ -4,18 +4,18 @@ import 'package:mynotes/services/cloud/clud_storage_constants.dart';
 
 @immutable
 class CloudNote {
-  final String documentID;
+  final String documentId;
   final String ownerUserId;
   final String text;
 
   const CloudNote(
-    this.documentID,
+    this.documentId,
     this.ownerUserId,
     this.text,
   );
 
   CloudNote.fromSnapshot(QueryDocumentSnapshot<Map<String, dynamic>> snapshot)
-      : documentID = snapshot.id,
+      : documentId = snapshot.id,
         ownerUserId = snapshot.data()[ownerUserIdFieldName],
         text = snapshot.data()[textFieldName] as String;
 }
