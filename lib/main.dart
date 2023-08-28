@@ -12,7 +12,7 @@ import 'package:mynotes/views/verify_email_view.dart';
 import 'constants/routes.dart';
 
 void main() {
-  WidgetsFlutterBinding();
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -22,7 +22,7 @@ void main() {
       ),
       home: BlocProvider<AuthBloc>(
         create: (context) => AuthBloc(FirebaseAuthProvider()),
-        child: Container(),
+        child: const HomePage(),
       ),
       routes: {
         loginRoute: (context) => const LoginView(),
@@ -41,7 +41,6 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     context.read<AuthBloc>().add(const AuthEventInitialize());
-
     return BlocBuilder<AuthBloc, AuthState>(
       builder: (context, state) {
         if (state is AuthStateLoggedIn) {
@@ -52,10 +51,62 @@ class HomePage extends StatelessWidget {
           return const LoginView();
         } else {
           return const Scaffold(
-            body: Center(child: CircularProgressIndicator()),
+            body: Center(
+              child: CircularProgressIndicator(),
+            ),
           );
         }
       },
     );
   }
 }
+
+// void main() {
+//   WidgetsFlutterBinding();
+//   runApp(
+//     MaterialApp(
+//       debugShowCheckedModeBanner: false,
+//       title: 'Flutter Demo',
+//       theme: ThemeData(
+//         primarySwatch: Colors.blue,
+//       ),
+//       home: const HomePage(),
+//       routes: {
+//         loginRoute: (context) => const LoginView(),
+//         registerRoute: (context) => const RegisterView(),
+//         notesRoute: (context) => const NotesView(),
+//         verifyEmailRoute: (context) => const VerifyEmailView(),
+//         createUpdateNoteRoute: (context) => const CreateUpdateNoteView(),
+//       },
+//     ),
+//   );
+// }
+
+// class HomePage extends StatelessWidget {
+//   const HomePage({super.key});
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return FutureBuilder(
+//       future: AuthService.firebase().initialize(),
+//       builder: (context, snapshot) {
+//         switch (snapshot.connectionState) {
+//           case ConnectionState.done:
+//             final user = AuthService.firebase().currentUser;
+//             if (user != null) {
+//               if (user.isEmailVerified) {
+//                 return const NotesView();
+//               } else {
+//                 return const VerifyEmailView();
+//               }
+//             } else {
+//               return const LoginView();
+//             }
+
+//           default:
+//             return const Center(child: CircularProgressIndicator());
+//         }
+//       },
+//     );
+//   }
+// }
