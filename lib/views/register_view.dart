@@ -58,6 +58,7 @@ class _RegisterViewState extends State<RegisterView> {
             children: [
               TextField(
                 controller: _email,
+                autofocus: true,
                 keyboardType: TextInputType.emailAddress,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
